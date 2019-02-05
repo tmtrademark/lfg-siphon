@@ -104,6 +104,34 @@ module.exports = function (nodecg) {
 		self.emit('subscription', data);
 	});
 
+	socket.on('subgift', data => {
+		if (channels.indexOf(data.channel) < 0) {
+			return;
+		}
+
+		if (equal(lastSub, data)) {
+			return;
+		}
+
+		lastSub = data;
+		nodecg.sendMessage('subscription', data);
+		self.emit('subscription', data);
+	});
+
+	socket.on('anonsubgift', data => {
+		if (channels.indexOf(data.channel) < 0) {
+			return;
+		}
+
+		if (equal(lastSub, data)) {
+			return;
+		}
+
+		lastSub = data;
+		nodecg.sendMessage('subscription', data);
+		self.emit('subscription', data);
+	});
+
 	let lastCheer;
 	socket.on('cheer', cheer => {
 		if (channels.indexOf(cheer.channel) < 0) {
