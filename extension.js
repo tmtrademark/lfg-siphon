@@ -132,6 +132,24 @@ module.exports = function (nodecg) {
 		self.emit('subscription', data);
 	});
 
+	socket.on('submysterygift', data => {
+		if (channels.indexOf(data.channel) < 0) {
+			return;
+		}
+
+		nodecg.sendMessage('submysterygift', data);
+		self.emit('submysterygift', data);
+	});
+
+	socket.on('anonsubmysterygift', data => {
+		if (channels.indexOf(data.channel) < 0) {
+			return;
+		}
+
+		nodecg.sendMessage('anonsubmysterygift', data);
+		self.emit('anonsubmysterygift', data);
+	});
+
 	let lastCheer;
 	socket.on('cheer', cheer => {
 		if (channels.indexOf(cheer.channel) < 0) {
