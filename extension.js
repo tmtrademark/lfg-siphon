@@ -99,6 +99,18 @@ module.exports = function (nodecg) {
 			return;
 		}
 
+		// check for username, if equal means that we're in a  gift sub loop
+		if (
+			'undefined' !== typeof(lastSub) &&
+			lastSub.username === data.username &&
+			data.recipient.length > 0 &&
+			( data.ts - lastSub.ts ) < 5000
+		) {
+			nodecg.log.warn("Sub Username match, recipient set, skipping gift sub extra info");
+			return;
+		}
+
+
 		lastSub = data;
 		nodecg.sendMessage('subscription', data);
 		self.emit('subscription', data);
@@ -114,8 +126,8 @@ module.exports = function (nodecg) {
 		}
 
 		lastSub = data;
-		nodecg.sendMessage('subscription', data);
-		self.emit('subscription', data);
+		nodecg.sendMessage('subgift', data);
+		self.emit('subgift', data);
 	});
 
 	socket.on('anonsubgift', data => {
@@ -128,8 +140,8 @@ module.exports = function (nodecg) {
 		}
 
 		lastSub = data;
-		nodecg.sendMessage('subscription', data);
-		self.emit('subscription', data);
+		nodecg.sendMessage('subgift', data);
+		self.emit('subgift', data);
 	});
 
 	socket.on('submysterygift', data => {
@@ -137,6 +149,7 @@ module.exports = function (nodecg) {
 			return;
 		}
 
+		lastSub = data;
 		nodecg.sendMessage('submysterygift', data);
 		self.emit('submysterygift', data);
 	});
