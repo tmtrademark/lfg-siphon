@@ -98,18 +98,22 @@ module.exports = function (nodecg) {
 		if (equal(lastSub, data)) {
 			return;
 		}
-
-		// check for username, if equal means that we're in a  gift sub loop
-		if (
-			'undefined' !== typeof(lastSub) &&
-			lastSub.username === data.username &&
-			data.recipient.length > 0 &&
-			( data.ts - lastSub.ts ) < 5000
-		) {
-			nodecg.log.warn("Sub Username match, recipient set, skipping gift sub extra info");
+		lastSub = data;
+		nodecg.sendMessage('subscription', data);
+		self.emit('subscription', data);
+	});
+	socket.on('resub', data => {
+		if (channels.indexOf(data.channel) < 0) {
 			return;
 		}
 
+		if (equal(lastSub, data)) {
+			return;
+		}
+
+		data.resub = true;
+		data.months = data.userstate['msg-param-cumulative-months'] || 0;
+		nodecg.log.warn("resub!");
 
 		lastSub = data;
 		nodecg.sendMessage('subscription', data);
